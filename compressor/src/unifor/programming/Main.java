@@ -70,8 +70,11 @@ public class Main {
 
     public static void decode(NoBinario root, String code) {
 
+        Vector codes = new Vector(); // The array that will be storing the letters and their respective code.
+
         if(root.left == null && root.right == null && Character.isLetter(root.letter)) {
-            System.out.println(root.letter + " : " + code);
+            codes.adicionar( root.letter + "-" + code);
+            codes.exibir();
             return;
         }
 
