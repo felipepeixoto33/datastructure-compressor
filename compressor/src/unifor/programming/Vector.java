@@ -1,121 +1,97 @@
 package unifor.programming;
 
+import java.io.IOException;
+
 public class Vector {
-    private No primeiro;
-    private No ultimo;
-    private int contadora;
+    private Object v[];
+    private int contador;
 
-    public Vector(){
-        primeiro = null;
-        ultimo = null;
-        contadora = 0;
+    public Vector() {
+        v = new Object[10];
+        contador = 0;
     }
-    public void adicionar(Object valor){
-        contadora++;
-        No novo = new No(valor);
-        if(primeiro == null){
-            primeiro = novo;
-            ultimo = novo;
-        }else{
-            ultimo.proximo = novo;
-            ultimo = novo;
-        }
+    public Vector(int n) {
+        contador = 0;
+        v = new Object[n];
     }
-    public void adicionar(Object valor, int posicao){
-        contadora++;
-        No novo = new No(valor);
-
-        if(primeiro == null) {
-            primeiro = novo;
-            ultimo = novo;
-        }
-        if(posicao >= 0 && posicao < contadora) {
-
-            if (posicao == 0) {
-                novo.proximo = primeiro;
-                primeiro = novo;
-            } else if (posicao == contadora - 1) {
-                ultimo.proximo = novo;
-                ultimo = novo;
-            } else {
-                No aux = primeiro;
-                int i = 0;
-                while (i < posicao - 1) {
-                    aux = aux.proximo;
-                    i++;
-                }
-                novo.proximo = aux.proximo;
-                aux.proximo = novo;
+    public void adicionar(Object valor) {
+        if(contador == v.length){
+            Object aux[] = new Object[(int)(v.length * 1.5)];
+            for (int i = 0; i < v.length; i++){
+                aux[i] = v[i];
             }
-        }else{
-            System.out.println("Posiçao invalida jovem");
+            v = aux;
         }
+        v[contador] = valor;
+        contador++;
     }
-    public void remover(int posicao){
-        if(primeiro != null && posicao >= 0 && posicao < contadora) {
-            No aux = primeiro;
-            if(posicao == 0){
-                primeiro = primeiro.proximo;
-            }else {
-                int i = 0;  //1
-                while (i < posicao - 1) {
-                    aux = aux.proximo;
-                    i++;
-                }
-                aux.proximo = aux.proximo.proximo;
-                if(posicao == contadora -1){
-                    ultimo = aux;
-                }
+    public void adicionar(Object valor, int posicao) {
+        if (posicao <= contador && contador < v.length) {
+            for (int i = contador; i > posicao; i--) {
+                v[i] = v[i - 1];
             }
-            contadora--;
+            v[posicao] = valor;
+            contador++;
+        }else if(posicao == v.length){
+            Object aux[] = new Object[(int)(v.length * 1.5)];
+            for (int i = 0; i < v.length; i++){
+                aux[i] = v[i];
+            }
+            v = aux;
+            v[posicao] = valor;
+            contador++;
+        }else if(posicao > v.length){
+            System.out.println("Você não pode por a carroça na frente dos bois!!");
+        }
+
+    }
+    public void remover(int posicao) {
+        if(posicao < contador) {
+            for (int i = posicao; i < contador - 1; i++) {
+                v[i] = v[i + 1];
+            }
+            contador--;
         }else{
-            System.out.println("Posiçao invalida jovem");
+            System.out.println("Não existe valor nessa posição!!");
         }
     }
-    public boolean pesquisar(Object valor){
-        No aux = primeiro;
-        while (aux != null){
-            if(aux.dado == valor){
+    public boolean pesquisar(Object valor) {
+        for (int i = 0; i < contador; i++){
+            if(v[i].equals(valor)) {
                 return true;
             }
-            aux = aux.proximo;
         }
         return false;
     }
-    public int pesquisarIndice(Object valor){
-        No aux = primeiro;
-        int i = 0;
-        while (aux != null) {
-            if(aux.dado == valor){
-                return i;
-            }
-            i++;
-            aux = aux.proximo;
-        }
-        return -1;
-    }
-    public Object pesquisarElemento(int posicao) throws Exception{
-        if(posicao >= 0 && posicao < contadora) {
-            No aux = primeiro;
-            int i = 0;
-            while (i < posicao) {
-                aux = aux.proximo;
-                i++;
-            }
-            return aux.dado;
+    public Object pesquisarElemento(int posicao) throws Exception {
+        if(posicao < contador) {
+            return v[posicao];
         }else{
             throw new Exception("Posição inválida");
         }
     }
-    public void exibir(){
-        No aux = primeiro;
-        while (aux != null){
-            System.out.print(aux.dado + " ");
-            aux = aux.proximo;
+    public boolean hasSomething(int posicao){
+        if(posicao < contador) {
+            if ((int)v[posicao] != 0)
+            return true;
+        }
+        return false;
+    }
+    public int pesquisarIndice(Object valor){
+        for (int i = 0; i < contador; i++){
+            if(v[i].equals(valor)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public int tamanho() {
+        return contador;
+    }
+    public void exibir() {
+        for(int i = 0; i < contador;i++){
+            System.out.print(v[i]+" ");
         }
         System.out.println();
-    }
-    public int tamanho(){
-        return contadora;
     }
 }

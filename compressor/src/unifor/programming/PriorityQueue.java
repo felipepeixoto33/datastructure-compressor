@@ -132,7 +132,7 @@ public class PriorityQueue {
 
         while (aux != null) {
             NoBinario test = (NoBinario) aux.dado;
-            System.out.print(test.data + " ");
+            System.out.print(test.data + "(" + test.letter + ") ");
             aux = aux.proximo;
         }
         System.out.println();
