@@ -12,8 +12,8 @@ public class PriorityQueue {
         cont = 0;
     }
 
-    public void enqueue(Object valor, int prioridade) {
-        NoPrioridade novo  = new NoPrioridade(valor, prioridade);
+    public void enqueue(NoBinario valor) {
+        NoPrioridade novo  = new NoPrioridade(valor, valor.data);
 
         if (primeiro == null) {  // Lista vazia?
             primeiro = novo;

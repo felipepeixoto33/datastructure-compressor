@@ -1,7 +1,7 @@
 package unifor.programming;
 
 public class NoBinario {
-    int data;
+    int data; //Freq
     char letter;
     NoBinario left;
     NoBinario right;
