@@ -23,7 +23,7 @@ public class Main {
         if(operation == 1) {
             compact(fileName);
         } else {
-            //decompact(fileName);
+            decompact(fileName);
         }
 
     }
@@ -121,86 +121,33 @@ public class Main {
 
     }
 
-    /*
+
     public static void decompact(String fileName) throws Exception {
-
-        BufferedReader buffer = new BufferedReader(new FileReader("src/doc/" + fileName + ".txt"));
-        //System.out.println(buffer.readLine());
-
-        String encoded = "";
-        Vector letters = new Vector();
-        Vector codes = new Vector();
-
-        while(buffer.ready()) {
-            //System.out.println(buffer.readLine());
-            char[] line = buffer.readLine().toCharArray();
-            //System.out.println(line);
-            boolean tableOver = false;
-            for(int i = 0; i < line.length; i++) {
-                //System.out.println(line[i]);
-
-                if(line[i] == '-') {
-                    tableOver = true;
-                    continue;
+        Vector vectorTreeBinary = new Vector(2);
+        Queue queueBinary;
+        HuffmanTree huffmanTree = new HuffmanTree();
+        try {
+            BufferedReader buffer = new BufferedReader(new FileReader("src/doc/" + fileName + "-c.txt"));
+            while (buffer.ready()){
+                String data = buffer.readLine();
+                int size = data.split("").length;
+                queueBinary = new Queue();
+                for(int i = 0; i < size; i++){
+                    queueBinary.enqueue(data.split("")[i]);
                 }
-
-                if(!tableOver) {
-                    encoded += line[i];
-                } else {
-
-
-
-                    if(Character.isDigit(line[i])) {
-                        String aCode = "";
-                        while(Character.isDigit(line[i])) {
-                            aCode += line[i];
-                            i++;
-                        }
-                        codes.adicionar(aCode);
-                    }
-
-                    if(Character.isLetter(line[i])) {
-                        letters.adicionar(line[i]);
-                    }
-
-
-
-                }
-
+                vectorTreeBinary.adicionar(queueBinary);
             }
-
-            if(letters.tamanho() != codes.tamanho()) {
-                System.out.println("Error: Table is Wrong");
-            }
-
+        }catch (Error err){
+            System.out.println("Você deve compactar primeiro!");
         }
 
-
-//        letters.exibir();
-//        codes.exibir();
-
-        String decoded = "";
-        String aCode = "";
-
-        for(int i = 0; i < encoded.length(); i++) {
-
-            if(codes.pesquisar(aCode)) {
-                //System.out.println( letters.pesquisarElemento( codes.pesquisarIndice(aCode) ) );
-
-                decoded += letters.pesquisarElemento( codes.pesquisarIndice(aCode) );
-                aCode = "";
-            }
-
-            aCode += encoded.charAt(i);
-
-        }
-
-        BufferedWriter writer = new BufferedWriter( new FileWriter("src/doc/" + fileName + ".txt") );
-        writer.write(decoded);
-        writer.close();
+//        for(int i = 0; i < vectorTreeBinary.tamanho(); i++){
+//            huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(i));
+//        }
+        huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(0));
 
     }
-    */
+
 
     public static void encode(NoBinario root, String code, Vector storeArray) {
 
