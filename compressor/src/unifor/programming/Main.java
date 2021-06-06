@@ -144,7 +144,9 @@ public class Main {
 //        for(int i = 0; i < vectorTreeBinary.tamanho(); i++){
 //            huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(i));
 //        }
+
         huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(0));
+        huffmanTree.buildData((Queue) vectorTreeBinary.pesquisarElemento(1));
 
     }
 

@@ -3,7 +3,8 @@ public class HuffmanTree {
     private NoBinario root;
     private String code = "";
     private String encodedTree = "";
-    private Queue littleQueue;
+    private Queue littleQueueTree;
+    private Queue littleQueueData;
 
     public HuffmanTree() {
         this.root = null;
@@ -38,7 +39,10 @@ public class HuffmanTree {
     private void encodeTree(NoBinario root) {
 
         if(root.left == null && root.right == null) {
-            encodedTree += "1" + Integer.toBinaryString(root.letter);
+            // Integer.toBinaryString(root.letter)
+            String binario = String.format("%8s", Integer.toBinaryString(root.letter)).replace(' ', '0');
+
+            encodedTree += "1" + binario;
             return;
         } else {
             encodedTree += "0";
@@ -49,63 +53,96 @@ public class HuffmanTree {
         encodeTree(root.right);
 
     }
-    public void buildTree(Queue queue) {
-        littleQueue = queue;
-        if(root == null){
-            root = new NoBinario(null);
+    public void buildTree(Queue queueTree) {
+        littleQueueTree = queueTree;
+
+        if(root == null && littleQueueTree.front().equals("0")){
+            NoBinario littleRoot = new NoBinario();
+            root = littleRoot;
+            littleQueueTree.dequeue();
+            buildTree(root);
+        }else if(littleQueueTree.front().equals("1")){
+            String letterBinary = "";
+            littleQueueTree.dequeue();
+            for (int i = 0; i < 8; i++) {
+                letterBinary += littleQueueTree.front();
+                littleQueueTree.dequeue();
+            }
+            System.out.println("Left Binario em String: " + letterBinary);
+            char letter = (char) Integer.parseInt(letterBinary, 2);
+            System.out.println("Left Binario em char: " + letter);
+            NoBinario littleRoot = new NoBinario(letter);
+            root = littleRoot;
         }
-        buildTree(root);
     }
     private void buildTree(NoBinario root) {
-        NoBinario littleNo;
-        if(root.left == null){
-            littleNo = root.left;
-            if(littleQueue.front().equals("0")){
-                littleNo = new NoBinario(root);
-                System.out.println("Tirando da fila: "+littleQueue.front());
-                littleQueue.dequeue();
-                buildTree(littleNo);
-            }else if(littleQueue.front().equals("1")){
+
+        if(root.left == null && Character.isWhitespace(root.letter)){
+            if(littleQueueTree.front().equals("0")){
+                NoBinario littleRoot = new NoBinario();
+                root.left = littleRoot;
+                littleQueueTree.dequeue();
+                buildTree(root.left);
+            }else if(littleQueueTree.front().equals("1")){
                 String letterBinary = "";
-                System.out.println("Tirando da fila antes de entrar no for: "+littleQueue.front());
-                littleQueue.dequeue();
+                littleQueueTree.dequeue();
                 for (int i = 0; i < 8; i++) {
-                    letterBinary += littleQueue.front();
-                    System.out.println("Tirando da fila: "+littleQueue.front());
-                    littleQueue.dequeue();
+                    letterBinary += littleQueueTree.front();
+                    littleQueueTree.dequeue();
                 }
-                System.out.println("Binario em String: " + letterBinary);
+                System.out.println("Left Binario em String: " + letterBinary);
                 char letter = (char) Integer.parseInt(letterBinary, 2);
-                System.out.println("Binario em char: " + letter);
-                littleNo = new NoBinario(letter, root);
+                System.out.println("Left Binario em char: " + letter);
+                NoBinario littleRoot = new NoBinario(letter);
+                root.left = littleRoot;
 //                buildTree(littleNo.previous);
 
 
             }
         }
-        if(root.right == null){
-            littleNo = root.right;
-            if(littleQueue.front().equals("0")){
-                littleNo = new NoBinario(root);
-                System.out.println("Tirando da fila: "+littleQueue.front());
-                littleQueue.dequeue();
-                buildTree(littleNo);
-            }else if(littleQueue.front().equals("1")){
+        if(root.right == null && Character.isWhitespace(root.letter)){
+            if(littleQueueTree.front().equals("0")){
+                root.right = new NoBinario();
+                littleQueueTree.dequeue();
+                buildTree(root.right);
+            }else if(littleQueueTree.front().equals("1")){
                 String letterBinary = "";
-                System.out.println("Tirando da fila: "+littleQueue.front());
-                littleQueue.dequeue();
+                littleQueueTree.dequeue();
                 for (int i = 0; i < 8; i++) {
-                    letterBinary += littleQueue.front();
-                    System.out.println("Tirando da fila: "+littleQueue.front());
-                    littleQueue.dequeue();
+                    letterBinary += littleQueueTree.front();
+                    littleQueueTree.dequeue();
                 }
-                System.out.println("Binario em String: " + letterBinary);
+                System.out.println("Right Binario em String: " + letterBinary);
                 char letter = (char) Integer.parseInt(letterBinary, 2);
-                System.out.println("Binario em char: " + letter);
-                littleNo = new NoBinario(letter, root);
+                System.out.println("Right Binario em char: " + letter);
+                root.right = new NoBinario(letter);
 //                buildTree(littleNo.previous);
 
 
+            }
+        }
+    }
+    public void buildData(Queue queueData){
+        littleQueueData = queueData;
+
+        if(root != null){
+            buildData(root);
+        }else{
+            System.out.println("Root é nula");
+        }
+    }
+    private void buildData(NoBinario root) {
+        if (!Character.isWhitespace(root.letter)) {
+            System.out.print(root.letter);
+            buildData(this.root);
+        } else {
+            if (!littleQueueData.empty() && littleQueueData.front().equals("0")) {
+                littleQueueData.dequeue();
+                buildData(root.left);
+            }
+            if (!littleQueueData.empty() && littleQueueData.front().equals("1")) {
+                littleQueueData.dequeue();
+                buildData(root.right);
             }
         }
     }
