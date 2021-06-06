@@ -13,7 +13,7 @@ public class NoBinario {
         this.right = null;
     }
     public NoBinario(){
-        this.letter = ' ';
+        this.letter = Character.MIN_VALUE;
         this.left = null;
         this.right = null;
     }

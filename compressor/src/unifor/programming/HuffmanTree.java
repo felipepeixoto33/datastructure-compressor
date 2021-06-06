@@ -1,4 +1,9 @@
 package unifor.programming;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class HuffmanTree {
     private NoBinario root;
     private String code = "";
@@ -6,11 +11,13 @@ public class HuffmanTree {
     private Queue littleQueueTree;
     private Queue littleQueueData;
 
-    public HuffmanTree() {
+    private String allText = "";
+
+    public HuffmanTree() throws IOException {
         this.root = null;
     }
 
-    public HuffmanTree(NoBinario root) {
+    public HuffmanTree(NoBinario root) throws IOException {
         this.root = root;
     }
 
@@ -75,9 +82,9 @@ public class HuffmanTree {
             root = littleRoot;
         }
     }
-    private void buildTree(NoBinario root) {
 
-        if(root.left == null && Character.isWhitespace(root.letter)){
+    private void buildTree(NoBinario root) {
+        if(root.left == null && root.letter == Character.MIN_VALUE){
             if(littleQueueTree.front().equals("0")){
                 NoBinario littleRoot = new NoBinario();
                 root.left = littleRoot;
@@ -100,7 +107,8 @@ public class HuffmanTree {
 
             }
         }
-        if(root.right == null && Character.isWhitespace(root.letter)){
+
+        if(root.right == null && root.letter == Character.MIN_VALUE){
             if(littleQueueTree.front().equals("0")){
                 root.right = new NoBinario();
                 littleQueueTree.dequeue();
@@ -122,20 +130,29 @@ public class HuffmanTree {
             }
         }
     }
-    public void buildData(Queue queueData){
+
+    public void buildData(Queue queueData) throws IOException {
         littleQueueData = queueData;
+
 
         if(root != null){
             buildData(root);
         }else{
             System.out.println("Root é nula");
         }
+
+        System.out.println(allText);
     }
-    private void buildData(NoBinario root) {
-        if (!Character.isWhitespace(root.letter)) {
+    private void buildData(NoBinario root) throws IOException {
+
+        if (root.letter != Character.MIN_VALUE) {
             System.out.print(root.letter);
+
+            allText += root.letter;
             buildData(this.root);
+
         } else {
+
             if (!littleQueueData.empty() && littleQueueData.front().equals("0")) {
                 littleQueueData.dequeue();
                 buildData(root.left);
@@ -151,4 +168,7 @@ public class HuffmanTree {
         return encodedTree;
     }
 
+    public String getAllText() {
+        return allText;
+    }
 }

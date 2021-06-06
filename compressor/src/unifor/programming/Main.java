@@ -15,12 +15,12 @@ public class Main {
         System.out.println("Digite o número para a operação a ser realizada. 1 = Compactar. 2 = Descompactar.");
         int operation = scanner.nextInt();
 
-        while(operation != 1 && operation != 2) {
+        while (operation != 1 && operation != 2) {
             System.out.println("Operação inválida. Operações dispoíveis: 1 (Compactar), 2 (Descompactar).");
             operation = scanner.nextInt();
         }
 
-        if(operation == 1) {
+        if (operation == 1) {
             compact(fileName);
         } else {
             decompact(fileName);
@@ -31,9 +31,10 @@ public class Main {
     public static void compact(String fileName) throws Exception {
 
         Vector allCharacters = new Vector();
+        Vector allText = new Vector();
         PriorityQueue fQueue = new PriorityQueue();
         Vector frequencyList = new Vector(256);
-        for(int i = 0; i < 255; i++){
+        for (int i = 0; i < 255; i++) {
             frequencyList.adicionar(0);
         }
 
@@ -41,26 +42,67 @@ public class Main {
 
         try {
             BufferedReader buffer = new BufferedReader(new FileReader("src/doc/" + fileName + ".txt"));
-            while (buffer.ready()){
+            boolean multipleLines = false;
+            while (buffer.ready()) {
+
+                Vector frase = new Vector();
                 char[] phrase = buffer.readLine().toCharArray();
-                for (int i = 0; i < phrase.length; i++){
-                    allCharacters.adicionar(phrase[i]); //Add the current element to the 'allLetters' array
-                    int position = phrase[i];
-                    //System.out.println(phrase[i] + " pos ASC: " + position );
-                    int value = (int)frequencyList.pesquisarElemento(position)+1;
-                    frequencyList.remover(position);
-                    frequencyList.adicionar(value, position);
+
+                for (int i = 0; i < phrase.length; i++) {
+                    frase.adicionar(phrase[i]);
                 }
-                for(int i = 0; i < frequencyList.tamanho(); i++){
-                    char character = (char)(i);
-                    if(frequencyList.hasSomething(i)){
-                        NoBinario huffmanNode = new NoBinario((int) frequencyList.pesquisarElemento(i), character);
-                        fQueue.enqueue( huffmanNode );
+
+                if (multipleLines) {
+                    frase.adicionar('\n', 0);
+                }
+
+                //frase.exibir();
+
+
+                for (int i = 0; i < frase.tamanho(); i++) {
+                    allCharacters.adicionar(frase.pesquisarElemento(i)); //Add the current element to the 'allLetters' array
+
+                    if (!allText.pesquisar(frase.pesquisarElemento(i))) {
+                        allText.adicionar(frase.pesquisarElemento(i));
                     }
+
                 }
+
+                //Add '\n' to phrase.
+                multipleLines = true;
+
                 //fQueue.show();
             }
-        } catch (Error e){
+
+            allText.exibir();
+
+            for (int i = 0; i < allText.tamanho(); i++) {
+
+
+                int position = (char) allText.pesquisarElemento(i); //Position on the ASCII table
+                if (position > 255) {
+                    continue;
+                }
+                System.out.println(i + "# " + position);
+                System.out.println("element:" + allText.pesquisarElemento(i));
+                //System.out.println(phrase[i] + " pos ASC: " + position );
+
+                int value = (int) frequencyList.pesquisarElemento(position) + 1;
+                frequencyList.remover(position);
+                frequencyList.adicionar(value, position);
+
+
+            }
+            for (int i = 0; i < frequencyList.tamanho(); i++) {
+                char character = (char) (i);
+                if (frequencyList.hasSomething(i)) {
+                    NoBinario huffmanNode = new NoBinario((int) frequencyList.pesquisarElemento(i), character);
+                    fQueue.enqueue(huffmanNode);
+                }
+            }
+
+
+        } catch (Error e) {
             System.out.println("Cry T.T");
         }
 
@@ -68,8 +110,7 @@ public class Main {
         //Creating the nodes
 
 
-
-        while(fQueue.length() > 1) {
+        while (fQueue.length() > 1) {
 
             NoBinario first = fQueue.front();
             fQueue.dequeue();
@@ -106,10 +147,10 @@ public class Main {
 
         writer.write("\n");
 
-        for(int i = 0; i < allCharacters.tamanho(); i++) {
-            for(int j = 0; j < codes.tamanho(); j++) {
+        for (int i = 0; i < allCharacters.tamanho(); i++) {
+            for (int j = 0; j < codes.tamanho(); j++) {
                 String actual = (String) codes.pesquisarElemento(j);
-                if(actual.charAt(0) == (char) allCharacters.pesquisarElemento(i)){
+                if (actual.charAt(0) == (char) allCharacters.pesquisarElemento(i)) {
 
                     //System.out.print(actual.substring(1));
                     writer.write(actual.substring(1));
@@ -123,21 +164,25 @@ public class Main {
 
 
     public static void decompact(String fileName) throws Exception {
+        System.out.println("Descompactando...");
         Vector vectorTreeBinary = new Vector(2);
         Queue queueBinary;
         HuffmanTree huffmanTree = new HuffmanTree();
         try {
             BufferedReader buffer = new BufferedReader(new FileReader("src/doc/" + fileName + "-c.txt"));
-            while (buffer.ready()){
+            while (buffer.ready()) {
+                System.out.println("entrou");
                 String data = buffer.readLine();
-                int size = data.split("").length;
+                String[] lineArr = data.split("");
+                int size = lineArr.length;
                 queueBinary = new Queue();
-                for(int i = 0; i < size; i++){
-                    queueBinary.enqueue(data.split("")[i]);
+
+                for (int i = 0; i < size; i++) {
+                    queueBinary.enqueue(lineArr[i]);
                 }
                 vectorTreeBinary.adicionar(queueBinary);
             }
-        }catch (Error err){
+        } catch (Error err) {
             System.out.println("Você deve compactar primeiro!");
         }
 
@@ -148,12 +193,15 @@ public class Main {
         huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(0));
         huffmanTree.buildData((Queue) vectorTreeBinary.pesquisarElemento(1));
 
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src/doc/" + fileName + "-dc.txt"));
+        writer.write(huffmanTree.getAllText());
+        writer.close();
     }
 
 
     public static void encode(NoBinario root, String code, Vector storeArray) {
 
-        if(root.right == null && root.left == null) { // Is it a Leaf Node?
+        if (root.right == null && root.left == null) { // Is it a Leaf Node?
             storeArray.adicionar(root.letter + code);
             return;
         }
