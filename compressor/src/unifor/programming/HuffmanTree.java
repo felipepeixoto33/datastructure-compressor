@@ -144,24 +144,40 @@ public class HuffmanTree {
         System.out.println(allText);
     }
     private void buildData(NoBinario root) throws IOException {
-
-        if (root.letter != Character.MIN_VALUE) {
-            System.out.print(root.letter);
-
-            allText += root.letter;
-            buildData(this.root);
-
-        } else {
-
-            if (!littleQueueData.empty() && littleQueueData.front().equals("0")) {
-                littleQueueData.dequeue();
-                buildData(root.left);
-            }
-            if (!littleQueueData.empty() && littleQueueData.front().equals("1")) {
-                littleQueueData.dequeue();
-                buildData(root.right);
+        NoBinario raiz = root;
+        NoBinario aux = root;
+        while (!littleQueueData.empty()){
+            if (aux.letter != Character.MIN_VALUE) {
+                allText += aux.letter;
+                aux = raiz;
+            } else {
+                if(littleQueueData.front().equals("0")){
+                    littleQueueData.dequeue();
+                    aux = aux.left;
+                }else if(littleQueueData.front().equals("1")){
+                    littleQueueData.dequeue();
+                    aux = aux.right;
+                }
             }
         }
+        allText += aux.letter;
+//*******************VERSÃO RECURSIVA DA QUAL PASSEI 3HRS PRA NO FINAL DA STACKOVERFLOW*******************
+
+//        if (root.letter != Character.MIN_VALUE) {
+//            allText += root.letter;
+//            buildData(this.root);
+//
+//        } else {
+//
+//            if (!littleQueueData.empty() && littleQueueData.front().equals("0")) {
+//                littleQueueData.dequeue();
+//                buildData(root.left);
+//            }
+//            if (!littleQueueData.empty() && littleQueueData.front().equals("1")) {
+//                littleQueueData.dequeue();
+//                buildData(root.right);
+//            }
+//        }
     }
 
     public String getEncodedTree() {

@@ -193,6 +193,7 @@ public class Main {
         huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(0));
         huffmanTree.buildData((Queue) vectorTreeBinary.pesquisarElemento(1));
 
+
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/doc/" + fileName + "-dc.txt"));
         writer.write(huffmanTree.getAllText());
         writer.close();
