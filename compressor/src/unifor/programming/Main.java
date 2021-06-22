@@ -184,6 +184,8 @@ public class Main {
         Queue queueBinary;
         HuffmanTree huffmanTree = new HuffmanTree();
         try {
+            //Ler o arquivo de texto onde tem os bits da mensagem e a huffman tree
+            // Passa a huffman tree para a posição 0 do array vectorTreeBinary, e na posição 1 do array fica armazenado a mensagem
             BufferedReader buffer = new BufferedReader(new FileReader("src/doc/" + fileName + "-c.txt"));
             while (buffer.ready()) {
                 System.out.println("entrou");
@@ -205,6 +207,7 @@ public class Main {
 //            huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(i));
 //        }
 
+        //Construção da huffman tree e da mensagem.
         huffmanTree.buildTree((Queue) vectorTreeBinary.pesquisarElemento(0));
         huffmanTree.buildData((Queue) vectorTreeBinary.pesquisarElemento(1));
 
