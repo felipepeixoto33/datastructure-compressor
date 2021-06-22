@@ -137,7 +137,7 @@ public class Main {
         //tree.show();
 
         String code = ""; // Código de cada letra de acordo com sua posição na árvore.
-        Vector codes = new Vector(); // Array que guarda os códigos da posição de cada letra.
+        Vector codes = new Vector(); // Array que guarda as letras do arquivo seguidas de seus códigos de posição.
 
         encode(fQueue.front(), code, codes); // Método responsável por codificar cada letra na árvore.
 
@@ -148,18 +148,25 @@ public class Main {
         //Putting the code and table into our file
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/doc/" + fileName + "-c.txt"));
+        //Cria um arquivo para depositar a versão compilada do arquivo raiz.
 
-        tree.encodeTree();
+        tree.encodeTree(); //Encodifica a árvore
 
-        writer.write(tree.getEncodedTree());
+        writer.write(tree.getEncodedTree()); //Pega a String com a árvore codificada e a escreve no arquivo.
 
         writer.write("\n");
 
         for (int i = 0; i < allCharacters.tamanho(); i++) {
+            /*
+            Percorre o array com todas as letras do arquivo e adiciona o seu respectivo
+            código ao arquivo.
+            */
             for (int j = 0; j < codes.tamanho(); j++) {
+                //Para cada letra no arquivo, pesquisa o seu respectivo código no array de códigos.
                 String actual = (String) codes.pesquisarElemento(j);
+                //String a letra atual seguida do seu próprio código.
                 if (actual.charAt(0) == (char) allCharacters.pesquisarElemento(i)) {
-
+                    //Caso o código encontrado seja a da letra atual, a escreve no arquivo.
                     //System.out.print(actual.substring(1));
                     writer.write(actual.substring(1));
                 }

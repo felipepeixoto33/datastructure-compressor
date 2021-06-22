@@ -44,7 +44,13 @@ public class HuffmanTree {
     }
 
     private void encodeTree(NoBinario root) {
-
+        /*
+        Percorre toda a árvore e a codifica, adicionando '0' caso o nó
+        encontrado não seja um nó folha e '1', caso seja.
+        Caso seja um nó folha, também adiciona a representação
+        binária de sua letra ao seu lado.
+        Adiciona tudo isso a uma String para a posterior utilização.
+        */
         if(root.left == null && root.right == null) {
             // Integer.toBinaryString(root.letter)
             String binario = String.format("%8s", Integer.toBinaryString(root.letter)).replace(' ', '0');
