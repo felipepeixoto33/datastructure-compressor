@@ -161,6 +161,7 @@ public class HuffmanTree {
             }
         }
         allText += aux.letter;
+
 //*******************VERSÃO RECURSIVA DA QUAL PASSEI 3HRS PRA NO FINAL DA STACKOVERFLOW*******************
 
 //        if (root.letter != Character.MIN_VALUE) {
@@ -178,6 +179,7 @@ public class HuffmanTree {
 //                buildData(root.right);
 //            }
 //        }
+
     }
 
     public String getEncodedTree() {

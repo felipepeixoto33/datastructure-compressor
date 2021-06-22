@@ -33,7 +33,7 @@ public class Main {
         Vector allCharacters = new Vector();
         Vector allText = new Vector();
         PriorityQueue fQueue = new PriorityQueue();
-        Vector frequencyList = new Vector(256);
+        Vector frequencyList = new Vector(256); //Lista com as frequência de cada caractere da tabela ASCII.
         for (int i = 0; i < 255; i++) {
             frequencyList.adicionar(0);
         }
@@ -42,33 +42,32 @@ public class Main {
 
         try {
             BufferedReader buffer = new BufferedReader(new FileReader("src/doc/" + fileName + ".txt"));
-            boolean multipleLines = false;
-            while (buffer.ready()) {
-
-                Vector frase = new Vector();
-                char[] phrase = buffer.readLine().toCharArray();
+            boolean multipleLines = false; //Indica se o arquivo tem ou não multiplas linhas.
+            while (buffer.ready()) { //Ler o arquivo de texto, linha por linha.
+                Vector frase = new Vector(); //Array com a linha atual, char por char, mas com a possibilidade de se adicionar '\n'
+                char[] phrase = buffer.readLine().toCharArray(); //Pega cada linha do arquivo e a transforma em um Array de Chars.
 
                 for (int i = 0; i < phrase.length; i++) {
                     frase.adicionar(phrase[i]);
                 }
 
                 if (multipleLines) {
-                    frase.adicionar('\n', 0);
+                    frase.adicionar('\n', 0); //Caso o arquivo possua multiplas linhas, adiciona um '\n' no início da frase.
                 }
 
                 //frase.exibir();
-
 
                 for (int i = 0; i < frase.tamanho(); i++) {
                     allCharacters.adicionar(frase.pesquisarElemento(i)); //Add the current element to the 'allLetters' array
 
                     if (!allText.pesquisar(frase.pesquisarElemento(i))) {
-                        allText.adicionar(frase.pesquisarElemento(i));
+                        allText.adicionar(frase.pesquisarElemento(i)); //Array com todos os tipos de letras que existem no arquivo.
                     }
 
                 }
 
                 //Add '\n' to phrase.
+                //Caso esse FOR execute mais de uma vez, significa que o arquivo tem mais de uma linha.
                 multipleLines = true;
 
                 //fQueue.show();
@@ -77,12 +76,13 @@ public class Main {
             allText.exibir();
 
             for (int i = 0; i < allText.tamanho(); i++) {
-
+                // Passa pelo array com cada tipo de letra e registra a sua frequência
 
                 int position = (char) allText.pesquisarElemento(i); //Position on the ASCII table
                 if (position > 255) {
                     continue;
                 }
+
                 System.out.println(i + "# " + position);
                 System.out.println("element:" + allText.pesquisarElemento(i));
                 //System.out.println(phrase[i] + " pos ASC: " + position );
@@ -93,7 +93,9 @@ public class Main {
 
 
             }
+
             for (int i = 0; i < frequencyList.tamanho(); i++) {
+                //Para cada letra que aparecer, cria um nó e o insere na lista de prioridade pela frequência.
                 char character = (char) (i);
                 if (frequencyList.hasSomething(i)) {
                     NoBinario huffmanNode = new NoBinario((int) frequencyList.pesquisarElemento(i), character);
@@ -111,7 +113,12 @@ public class Main {
 
 
         while (fQueue.length() > 1) {
-
+            //Cria a árvore de Huffmann.
+            /*
+            Enquanto o tamanho da lista com os nós for maior que um, pega
+            os dois primeiros nós e cria um novo nó pai, com a soma da frequência deles
+            e com o filho esquerdo sendo o primeiro nó filho, e o direito, o segundo.
+            */
             NoBinario first = fQueue.front();
             fQueue.dequeue();
             NoBinario second = fQueue.front();
@@ -125,13 +132,14 @@ public class Main {
 
         }
 
+        //Após criar a árvore na nossa lista de prioridade, o adicionamos à nossa classe da Árvore de Huffmann
         HuffmanTree tree = new HuffmanTree(fQueue.front());
         //tree.show();
 
-        String code = "";
-        Vector codes = new Vector();
+        String code = ""; // Código de cada letra de acordo com sua posição na árvore.
+        Vector codes = new Vector(); // Array que guarda os códigos da posição de cada letra.
 
-        encode(fQueue.front(), code, codes);
+        encode(fQueue.front(), code, codes); // Método responsável por codificar cada letra na árvore.
 
         //codes.exibir();
 
@@ -207,6 +215,11 @@ public class Main {
             return;
         }
 
+        /*
+        Percorre toda a árvore de huffmann e, quando entra em um nó esquerdo, adiciona '0' ao código
+        da letra atual, ao encontrar um nó direito, adiciona um.
+        Após encontrar o nó folha, guarda o código da letra no array com todos os códigos.
+        */
         encode(root.left, code + "0", storeArray);
         encode(root.right, code + "1", storeArray);
 
